@@ -3,31 +3,23 @@ const { fork } = require('child_process');
 const path = require('path');
 const fs = require('fs');
 const simpleGit = require('simple-git');
+const dotenv = require('dotenv');
+dotenv.config();
 
 const app = express();
 app.use(express.json());
 
 
 const git = simpleGit();
-const base_url = "E:/Projects"
+const base_url = process.env.BASE_URL;
 const scriptPath = path.join(__dirname, 'buildProcess.js');
 let buildProcess;
 const log = {};
 log.build = [];
-log.error = [];
 
 app.get('/', (req, res) => {
- // get all folders at the root of the project (list of already built apps)
- // exec('ls -d */', (err, stdout, stderr) => {
- //  if (err) {
- //   console.error(`exec error: ${err}`);
- //   return;
- //  }
  const indexPath = path.join(__dirname, 'views', 'index.html');
  res.sendFile(indexPath);
- // });
-
- // return res.json({ message: 'Welcome to the build server' });
 });
 
 app.post('/build', async (req, res) => {
@@ -79,7 +71,7 @@ app.post('/build', async (req, res) => {
 
  // send message to parent
  buildProcess.stderr.on('data', (data) => {
-  log.error.push(data.toString());
+  log.build.push(data.toString());
  });
 
  // send message to parent
@@ -108,6 +100,6 @@ app.delete('/kill', (req, res) => {
  return res.json({ message: 'Build process killed' });
 });
 
-app.listen(3000, () => {
- console.log('Server is running on port 3000');
+app.listen(process.env.PORT, () => {
+ console.log(`Server is running on port ${process.env.PORT}`);
 });
