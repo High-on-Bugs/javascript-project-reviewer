@@ -7,7 +7,7 @@ const [folderPath, command] = process.argv.slice(2);
 const buildCommand = command.split(' ');
 buildCommand.shift();
 
-const buildProcess = spawn('npm.cmd', buildCommand, { cwd: folderPath, stdio: 'pipe' });
+const buildProcess = spawn('npm.cmd', buildCommand, { cwd: folderPath });
 
 // send message to parent
 buildProcess.stdout.on('data', (data) => {

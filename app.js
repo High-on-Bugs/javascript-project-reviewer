@@ -3,15 +3,14 @@ const { fork } = require('child_process');
 const path = require('path');
 const fs = require('fs');
 const simpleGit = require('simple-git');
-const dotenv = require('dotenv');
-dotenv.config();
+require('dotenv').config();
 
 const app = express();
 app.use(express.json());
 
 
 const git = simpleGit();
-const base_url = process.env.BASE_URL;
+const base_url = process.env.JAVASCRIPT_APP_BASE_PROJECT_URL;
 const scriptPath = path.join(__dirname, 'buildProcess.js');
 let buildProcess;
 const log = {};
@@ -61,8 +60,8 @@ app.post('/build', async (req, res) => {
  log.env = `Env file created!`;
 
  console.log("Building Project...");
- // convert build command to array
- buildProcess = fork(scriptPath, [folderPath, command], { stdio: 'pipe' });
+ // we also need to pass env to separate child env from parent env
+ buildProcess = fork(scriptPath, [folderPath, command], { stdio: "pipe" });
 
  // send message to parent
  buildProcess.stdout.on('data', (data) => {
@@ -100,6 +99,6 @@ app.delete('/kill', (req, res) => {
  return res.json({ message: 'Build process killed' });
 });
 
-app.listen(process.env.PORT, () => {
- console.log(`Server is running on port ${process.env.PORT}`);
+app.listen(process.env.JAVASCRIPT_APP_TEST_PORT, () => {
+ console.log(`Server is running on port ${process.env.JAVASCRIPT_APP_TEST_PORT}`);
 });
