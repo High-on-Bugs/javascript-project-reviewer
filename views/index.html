@@ -168,7 +168,7 @@
   </form>
   
   <div class="inv-buttons">
-    <button id="killButton" onclick="killBuild()">Kill Build</button>
+    <button id="killButton" onclick="killBuild()">Open VSCode</button>
     <button id="logsButton" onclick="getLogs()">Refresh Build Logs</button>
   </div>
 
@@ -268,12 +268,12 @@
     }
 
     function killBuild() {
-      fetch('/kill', {
-        method: 'DELETE',
+      fetch('/code', {
+        method: 'GET',
       })
         .then(() => {
           // Refresh the page after killing the build process
-          location.reload();
+          // location.reload();
         });
     }
   </script>

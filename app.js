@@ -1,5 +1,5 @@
 const express = require('express');
-const { fork } = require('child_process');
+const { fork, spawn } = require('child_process');
 const path = require('path');
 const fs = require('fs');
 const simpleGit = require('simple-git');
@@ -10,9 +10,10 @@ app.use(express.json());
 
 
 const git = simpleGit();
+let controller;
 const base_url = process.env.JAVASCRIPT_APP_BASE_PROJECT_URL;
 const scriptPath = path.join(__dirname, 'buildProcess.js');
-let buildProcess;
+let folderPath;
 const log = {};
 log.build = [];
 
@@ -25,13 +26,13 @@ app.post('/build', async (req, res) => {
 
  let { url, command, env } = req.body;
  const folderName = url.split('/').pop().split('.git')[0];
- const folderPath = `${base_url}/${folderName}`;
+ folderPath = `${base_url}/${folderName}`;
 
  // check if folder exists
  if (fs.existsSync
   (folderPath)) {
   // cloning not needed
-  log.clone = "Repo already cloned\n";
+  log.clone = "Repo already cloned.";
  } else {
 
   console.log("Cloning repo...");
@@ -61,7 +62,9 @@ app.post('/build', async (req, res) => {
 
  console.log("Building Project...");
  // we also need to pass env to separate child env from parent env
- buildProcess = fork(scriptPath, [folderPath, command], { stdio: "pipe" });
+ controller = new AbortController();
+ const { signal } = controller;
+ const buildProcess = fork(scriptPath, [folderPath, command], { stdio: "pipe", signal });
 
  // send message to parent
  buildProcess.stdout.on('data', (data) => {
@@ -93,10 +96,15 @@ app.get('/logs', (req, res) => {
 });
 
 // kill route
-app.delete('/kill', (req, res) => {
- // kill the build process
- buildProcess.kill();
- return res.json({ message: 'Build process killed' });
+app.get('/code', (req, res) => {
+ /// run "code ." command in the folderPath
+ const vscodeProcess = spawn('code', [folderPath], { shell: true });
+ // Handle errors during the spawn process
+ vscodeProcess.on('error', (err) => {
+  return res.status(500).json({ message: 'Error opening project in VSCode', error: err });
+ });
+ // return success message
+ return res.json({ message: 'Project opened in VSCode' });
 });
 
 app.listen(process.env.JAVASCRIPT_APP_TEST_PORT, () => {

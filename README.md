@@ -12,23 +12,29 @@ Before running the application, make sure you have the following dependencies in
 
 - Clone the repository:
 
-   ```shell
-   git clone https://github.com/High-on-Bugs/javascript-project-reviewer.git
+  ```shell
+  git clone https://github.com/High-on-Bugs/javascript-project-reviewer.git
+
+  ```
 
 - Navigate to the project directory:
 
-   ```shell
-   cd javascript-project-reviewer
-   
+  ```shell
+  cd javascript-project-reviewer
+
+  ```
+
 - Edit the env file to suit your preference (BASE_URL and PORT)
 
 ## Running the Application
 
 - Start the Node.js server:
-  
-     ```shell
-     node server.js
-     
+
+  ```shell
+  node server.js
+
+  ```
+
 ## Testing
 
 - Use the provided HTML form on the homepage (http://localhost:PORT) to create new project.
@@ -38,17 +44,6 @@ Before running the application, make sure you have the following dependencies in
 - Click Build
 - Refresh logs until app starts
 - check or kill app
-
-## Windows Service Setup
-- Run the Command
-
-   ```shell
-   node createService.js
-   
-- Permit all Windows security pop-ups
-- Visit site
-
-The Node.js application will now run as a Windows service, starting automatically whenever your computer starts.
 
 ## Author
 
