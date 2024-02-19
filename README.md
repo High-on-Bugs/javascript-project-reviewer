@@ -28,12 +28,7 @@ Before running the application, make sure you have the following dependencies in
 
 ## Running the Application
 
-- Start the Node.js server:
-
-  ```shell
-  node server.js
-
-  ```
+- Run the run.bat or run.sh file
 
 ## Testing
 
@@ -43,6 +38,7 @@ Before running the application, make sure you have the following dependencies in
 
 - Click Build
 - Refresh logs until app starts
+- Start VS Code (if installed)
 - check or kill app
 
 ## Author
